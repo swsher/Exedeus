@@ -290,8 +290,11 @@ class Player:
         self.z += self.velZ
         
         uncheckedCol = True
-        while uncheckedCol:
+        checkOverload = 100
+        while uncheckedCol and checkOverload > 0:
             uncheckedCol = False
+            checkOverload -= 1
+
             for obj in objectList:
                 xCollide = (self.x<(obj.x+obj.length)) and (obj.x<(self.x+Player.LENGTH))
                 yCollide = (self.y<(obj.y+obj.height)) and (obj.y<(self.y+Player.HEIGHT))
@@ -392,8 +395,8 @@ class InputString:
     
     def getAction(self):
         global time
-        if len(self.string) > time:
-            return ord(self.string[time])-48
+        if len(self.string) > time*3:
+            return int(self.string[time*3:time*3+3])
         else:
             return 0
             
@@ -419,7 +422,7 @@ def loadSNFA():
     floor1Color = (0.98, 0.5, 0.45, 1.0)
     floor2Color = (0.14, 0.24, 0.6, 1.0)
         
-    player = Player(-7000, 200, 1000, 225)
+    player = Player(-7000, 500, 1000, 225)
     winpad = Object(3699, 10299, 1820, 500, 100, 500, winpadColor)
     objectList = []
     
@@ -599,7 +602,7 @@ def loadSNFA():
 def loadToFG():
     pass
 
-def tas(loadString="tas.txt"):
+def tas(loadString=None):
     global time
     GHOST_COLOR = (0.0, 1.0, 1.0, 0.2)
     
@@ -614,8 +617,8 @@ def tas(loadString="tas.txt"):
     
     if loadString is not None:
         loadIS = InputString(loadString, True)
-        for i, char in enumerate(loadIS.string):
-            inputArr[i] = ord(char)-48
+        for i in range(0, len(loadIS.string)/3):
+            inputArr[i] = int(loadIS.string[i*3:i*3+3])
         
     pygame.init()
     screen = pygame.display.set_mode((0, 0), pygame.DOUBLEBUF | pygame.OPENGL | pygame.FULLSCREEN)
@@ -674,9 +677,9 @@ def tas(loadString="tas.txt"):
                         active = False
                         ghostString = ""
                         for inp in inputArr:
-                            ghostString += chr(action+48)
+                            ghostString += f"{action:03d}"
                         ghostString = ghostString.rstrip('0')
-                        with open("tas.txt", "w") as file:
+                        with open("ghost.txt", "w") as file:
                             file.write(ghostString)
                 if event.key == pygame.K_COMMA:
                     time -= 1
@@ -689,10 +692,9 @@ def tas(loadString="tas.txt"):
                 if event.key == pygame.K_p:
                     ghostString = ""
                     for inp in inputArr:
-                        ghostString += chr(action+48)
+                        ghostString += f"{action:03d}"
                     ghostString = ghostString.rstrip('0')
-                    print(ghostString)
-                    with open("tas.txt", 'w') as file:
+                    with open("ghost.txt", 'w') as file:
                         file.write(ghostString)
                 if event.key == pygame.K_j:
                     continueFlag = True
@@ -830,9 +832,9 @@ def play():
     GHOST_COLOR = (0.0, 1.0, 1.0, 0.2)
     
     global time
-    level = loadSNFA
+    level = loadBasicJumps
     player, objectList, winpad = level()
-    controller = Human()
+    controller = InputString("tas.txt", True)
     
     pygame.init()
     screen = pygame.display.set_mode((0, 0), pygame.DOUBLEBUF | pygame.OPENGL | pygame.FULLSCREEN)
@@ -855,7 +857,7 @@ def play():
     ZOOM_MAX = 20000
     
     ghostString = ""
-    ghostList = [[Player(player.x, player.y, player.z, player.direction), InputString("tas.txt", True)]]
+    ghostList = [[Player(player.x, player.y, player.z, player.direction), InputString("pb.txt", True)]]
     
     won = False
     printing = True
@@ -870,8 +872,6 @@ def play():
                 if event.key == pygame.K_q:
                     active = False
                 if event.key == pygame.K_p:
-                    print("Frames: ", time)
-                    print(ghostString)
                     with open("ghost.txt", 'w') as file:
                         file.write(ghostString)
         
@@ -916,7 +916,7 @@ def play():
                 ghost[0].x = -999999
         
         action = controller.getAction()
-        ghostString += chr(action+48)
+        ghostString += f"{action:03d}"
         time += 1
         won = player.doTick(action, objectList, winpad)
         
@@ -973,8 +973,6 @@ def play():
         drawInputOverlay(action, width, height)
         
         if won:
-            print("Frames: ", time)
-            print(ghostString)
             with open("ghost.txt", 'w') as file:
                 file.write(ghostString)
             active = False
@@ -983,7 +981,7 @@ def play():
         clock.tick(60)
     
 def main():
-    play()
+    tas()
 
 if __name__ == "__main__":
     main()

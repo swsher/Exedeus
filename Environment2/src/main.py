@@ -641,7 +641,7 @@ def tas(loadString=None):
     ghostString = ""
     tasGhost = [Player(player.x, player.y, player.z, player.direction), InputString("tas.txt", True)]
     
-    # computing ghost state (god bless america)
+    # computing ghost state
     
     ghostWon = False
     time = 0
@@ -677,7 +677,7 @@ def tas(loadString=None):
                         active = False
                         ghostString = ""
                         for inp in inputArr:
-                            ghostString += f"{action:03d}"
+                            ghostString += f"{inp:03d}"
                         ghostString = ghostString.rstrip('0')
                         with open("ghost.txt", "w") as file:
                             file.write(ghostString)
@@ -692,7 +692,7 @@ def tas(loadString=None):
                 if event.key == pygame.K_p:
                     ghostString = ""
                     for inp in inputArr:
-                        ghostString += f"{action:03d}"
+                        ghostString += f"{inp:03d}"
                     ghostString = ghostString.rstrip('0')
                     with open("ghost.txt", 'w') as file:
                         file.write(ghostString)
@@ -795,14 +795,15 @@ def tas(loadString=None):
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
         
         if time < len(ghostStateArr):
-            ghostMinCorner = (tasGhost[0].x, tasGhost[0].y, tasGhost[0].z)
-            ghostMaxCorner = (tasGhost[0].x+Player.LENGTH, tasGhost[0].y+Player.HEIGHT, tasGhost[0].z+Player.WIDTH)
+            ghostMinCorner = (ghostStateArr[time].x, ghostStateArr[time].y, ghostStateArr[time].z)
+            ghostMaxCorner = (ghostStateArr[time].x+Player.LENGTH, ghostStateArr[time].y+Player.HEIGHT, ghostStateArr[time].z+Player.WIDTH)
             drawCuboid(ghostMinCorner, ghostMaxCorner, GL.GL_TRIANGLES, GHOST_COLOR)
         
         if zoomThirdPerson:
             playerMinCorner = (player.x, player.y, player.z)
             playerMaxCorner = (player.x+Player.LENGTH, player.y+Player.HEIGHT, player.z+Player.WIDTH)
             drawCuboid(playerMinCorner, playerMaxCorner, GL.GL_TRIANGLES, Player.COLOR)
+
         winpadMinCorner = (winpad.x, winpad.y, winpad.z)
         winpadMaxCorner = (winpad.x+winpad.length, winpad.y+winpad.height, winpad.z+winpad.width)
         drawCuboid(winpadMinCorner, winpadMaxCorner, GL.GL_TRIANGLES, winpad.color)
@@ -813,10 +814,12 @@ def tas(loadString=None):
         
         if zoomThirdPerson:
             drawCuboid(playerMinCorner, playerMaxCorner, color=(0.0, 0.0, 0.0, 1.0))
+
         if time < len(ghostStateArr):
-            ghostMinCorner = (tasGhost[0].x, tasGhost[0].y, tasGhost[0].z)
-            ghostMaxCorner = (tasGhost[0].x+Player.LENGTH, tasGhost[0].y+Player.HEIGHT, tasGhost[0].z+Player.WIDTH)
+            ghostMinCorner = (ghostStateArr[time].x, ghostStateArr[time].y, ghostStateArr[time].z)
+            ghostMaxCorner = (ghostStateArr[time].x+Player.LENGTH, ghostStateArr[time].y+Player.HEIGHT, ghostStateArr[time].z+Player.WIDTH)
             drawCuboid(ghostMinCorner, ghostMaxCorner, color=(0.0, 0.0, 0.0, 1.0))
+
         drawCuboid(winpadMinCorner, winpadMaxCorner)
         for obj in objectList:
             objMinCorner = (obj.x, obj.y, obj.z)
@@ -834,7 +837,7 @@ def play():
     global time
     level = loadBasicJumps
     player, objectList, winpad = level()
-    controller = InputString("tas.txt", True)
+    controller = InputString("ghost.txt", True)
     
     pygame.init()
     screen = pygame.display.set_mode((0, 0), pygame.DOUBLEBUF | pygame.OPENGL | pygame.FULLSCREEN)

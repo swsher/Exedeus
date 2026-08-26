@@ -639,7 +639,7 @@ def tas(loadString=None):
     ZOOM_MAX = 20000
     
     ghostString = ""
-    tasGhost = [Player(player.x, player.y, player.z, player.direction), InputString("tas.txt", True)]
+    tasGhost = [Player(player.x, player.y, player.z, player.direction), InputString("tas1.txt", True)]
     
     # computing ghost state
     
@@ -837,7 +837,7 @@ def play():
     global time
     level = loadBasicJumps
     player, objectList, winpad = level()
-    controller = InputString("ghost.txt", True)
+    controller = InputString("tas2.txt", True)
     
     pygame.init()
     screen = pygame.display.set_mode((0, 0), pygame.DOUBLEBUF | pygame.OPENGL | pygame.FULLSCREEN)
@@ -984,7 +984,7 @@ def play():
         clock.tick(60)
     
 def main():
-    tas()
+    play()
 
 if __name__ == "__main__":
     main()

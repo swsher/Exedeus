@@ -1,6 +1,41 @@
 import os
-import pygame
+import sys
+import glob
+import ctypes
+
+# Bootstrap shared library paths for Linux/NixOS if SDL/OpenGL libraries are not in LD_LIBRARY_PATH
+if sys.platform.startswith('linux') and 'ENV_BOOTSTRAPPED' not in os.environ:
+    needs_bootstrap = False
+    try:
+        ctypes.CDLL('libGL.so.1')
+        ctypes.CDLL('libX11.so.6')
+    except OSError:
+        needs_bootstrap = True
+
+    if needs_bootstrap:
+        search_dirs = ['/run/opengl-driver/lib']
+        pkgs = [
+            'libglvnd', 'glu', 'mesa', 'libx11', 'libxext', 'libxcursor',
+            'libxi', 'libxfixes', 'libxrandr', 'libxrender', 'wayland',
+            'libxkbcommon', 'libdecor', 'dbus', 'alsa-lib', 'libpulseaudio'
+        ]
+        for pkg in pkgs:
+            for p in glob.glob(f'/nix/store/*-{pkg}-*/lib'):
+                search_dirs.append(p)
+        
+        if search_dirs:
+            env = os.environ.copy()
+            current_ld = env.get('LD_LIBRARY_PATH', '')
+            env['LD_LIBRARY_PATH'] = ':'.join(search_dirs) + (':' + current_ld if current_ld else '')
+            env['PYOPENGL_PLATFORM'] = 'glx'
+            env['ENV_BOOTSTRAPPED'] = '1'
+            os.execve(sys.executable, [sys.executable] + sys.argv, env)
+
+if 'PYOPENGL_PLATFORM' not in os.environ:
+    os.environ['PYOPENGL_PLATFORM'] = 'glx'
+
 import math
+import pygame
 from OpenGL import GL
 from OpenGL import GLU
 
@@ -863,7 +898,7 @@ def play():
     ghostString = ""
     ghostList = []
     for i in range(1, 6):
-        ghostList.append([Player(player.x, player.y, player.z, player.direction), InputString(f"towerpbs\pbtower{i}.txt", True)])
+        ghostList.append([Player(player.x, player.y, player.z, player.direction), InputString(f"towerpbs/pbtower{i}.txt", True)])
     
     won = False
     printing = True

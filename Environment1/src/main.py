@@ -1,6 +1,7 @@
 import pygame
 import time as t # bum used time as a var
 import json
+import socket
 
 class Player:
   WIDTH = 100

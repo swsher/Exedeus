@@ -834,12 +834,15 @@ def tas(loadString=None):
         pygame.display.flip()   
         clock.tick(60)
 
-def play():
+def play(multiplayer=False):
     SERVER_IP = "141.219.247.9"
     SERVER_PORT = 55555
-    send_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    receive_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    receive_sock.bind((SERVER_IP, SERVER_PORT))
+
+    if multiplayer:
+        send_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        receive_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        receive_sock.bind(("0.0.0.0", SERVER_PORT))
+        receive_sock.setblocking(False)
 
     GHOST_COLOR = (0.0, 1.0, 1.0, 0.2)
     
@@ -871,8 +874,8 @@ def play():
     ghostString = ""
     ghostList = []
     multiPlayerList = [Player(0, 0, 0, 0)]
-    for i in range(1, 6):
-        ghostList.append([Player(player.x, player.y, player.z, player.direction), InputString(f"towerpbs\pbtower{i}.txt", True)])
+    #for i in range(1, 6):
+        #ghostList.append([Player(player.x, player.y, player.z, player.direction), InputString(f"towerpbs\pbtower{i}.txt", True)])
     
     won = False
     printing = True
@@ -880,17 +883,20 @@ def play():
     while active:
         # multiplayer handling
         # broadcasting position
-        message = struct.pack("!fffi", player.x, player.y, player.z, player.direction)
-        send_sock.sendto(message, (SERVER_IP, SERVER_PORT))
+        if multiplayer:
+            message = struct.pack("!fffi", player.x, player.y, player.z, player.direction)
+            send_sock.sendto(message, (SERVER_IP, SERVER_PORT))
 
         # receiving other player's positions
-        message, addr = receive_sock.recvfrom(1024)
-        multiPlayerData = struct.unpack("!fffi", message)
-
-        multiPlayerList[0].x = multiPlayerData[0]
-        multiPlayerList[0].y = multiPlayerData[1]
-        multiPlayerList[0].z = multiPlayerData[2]
-        multiPlayerList[0].direction = multiPlayerData[3]
+            try:
+                message, addr = receive_sock.recvfrom(1024)
+                multiPlayerData = struct.unpack("!fffi", message)
+                multiPlayerList[0].x = multiPlayerData[0]
+                multiPlayerList[0].y = multiPlayerData[1]
+                multiPlayerList[0].z = multiPlayerData[2]
+                multiPlayerList[0].direction = multiPlayerData[3]
+            except:
+                pass
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -1014,13 +1020,12 @@ def play():
         pygame.display.flip()   
         clock.tick(60)
 
-    send_sock.close()
-    receive_sock.close()
+    if multiplayer:
+        send_sock.close()
+        receive_sock.close()
     
 def main():
-    play()
+    play(True)
 
 if __name__ == "__main__":
     main()
-
-

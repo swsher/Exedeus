@@ -1015,7 +1015,7 @@ def play():
         clock.tick(60)
 
     send_sock.close()
-    #receive_sock.close()
+    receive_sock.close()
     
 def main():
     play()

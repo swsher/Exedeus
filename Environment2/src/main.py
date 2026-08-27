@@ -38,6 +38,8 @@ import math
 import pygame
 from OpenGL import GL
 from OpenGL import GLU
+import socket
+import struct
 
 INV_SQRT_2 = 1/math.sqrt(2)
 
@@ -867,7 +869,16 @@ def tas(loadString=None):
         pygame.display.flip()   
         clock.tick(60)
 
-def play():
+def play(multiplayer=False):
+    SERVER_IP = "141.219.247.9"
+    SERVER_PORT = 55555
+
+    if multiplayer:
+        send_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        receive_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        receive_sock.bind(("0.0.0.0", SERVER_PORT))
+        receive_sock.setblocking(False)
+
     GHOST_COLOR = (0.0, 1.0, 1.0, 0.2)
     
     global time
@@ -899,11 +910,31 @@ def play():
     ghostList = []
     for i in range(1, 6):
         ghostList.append([Player(player.x, player.y, player.z, player.direction), InputString(f"towerpbs/pbtower{i}.txt", True)])
+    multiPlayerList = [Player(0, 0, 0, 0)]
+    #for i in range(1, 6):
+        #ghostList.append([Player(player.x, player.y, player.z, player.direction), InputString(f"towerpbs\pbtower{i}.txt", True)])
     
     won = False
     printing = True
     
     while active:
+        # multiplayer handling
+        # broadcasting position
+        if multiplayer:
+            message = struct.pack("!fffi", player.x, player.y, player.z, player.direction)
+            send_sock.sendto(message, (SERVER_IP, SERVER_PORT))
+
+        # receiving other player's positions
+            try:
+                message, addr = receive_sock.recvfrom(1024)
+                multiPlayerData = struct.unpack("!fffi", message)
+                multiPlayerList[0].x = multiPlayerData[0]
+                multiPlayerList[0].y = multiPlayerData[1]
+                multiPlayerList[0].z = multiPlayerData[2]
+                multiPlayerList[0].direction = multiPlayerData[3]
+            except:
+                pass
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 active = False
@@ -986,7 +1017,11 @@ def play():
             ghostMinCorner = (ghost[0].x, ghost[0].y, ghost[0].z)
             ghostMaxCorner = (ghost[0].x+Player.LENGTH, ghost[0].y+Player.HEIGHT, ghost[0].z+Player.WIDTH)
             drawCuboid(ghostMinCorner, ghostMaxCorner, GL.GL_TRIANGLES, GHOST_COLOR)
-        
+
+        mpMinCorner = (multiPlayerList[0].x, multiPlayerList[0].y, multiPlayerList[0].z)
+        mpMaxCorner = (multiPlayerList[0].x+Player.LENGTH, multiPlayerList[0].y+Player.HEIGHT, multiPlayerList[0].z+Player.WIDTH)
+        drawCuboid(mpMinCorner, mpMaxCorner, GL.GL_TRIANGLES, color=(0.33, 0.33, 0.33, 1.0))
+
         if zoomThirdPerson:
             playerMinCorner = (player.x, player.y, player.z)
             playerMaxCorner = (player.x+Player.LENGTH, player.y+Player.HEIGHT, player.z+Player.WIDTH)
@@ -1006,6 +1041,7 @@ def play():
             ghostMaxCorner = (ghost[0].x+Player.LENGTH, ghost[0].y+Player.HEIGHT, ghost[0].z+Player.WIDTH)
             drawCuboid(ghostMinCorner, ghostMaxCorner, color=(0.0, 0.0, 0.0, 1.0))
         drawCuboid(winpadMinCorner, winpadMaxCorner)
+        drawCuboid(mpMinCorner, mpMaxCorner)
         for obj in objectList:
             objMinCorner = (obj.x, obj.y, obj.z)
             objMaxCorner = (obj.x+obj.length, obj.y+obj.height, obj.z+obj.width)
@@ -1020,11 +1056,13 @@ def play():
         
         pygame.display.flip()   
         clock.tick(60)
+
+    if multiplayer:
+        send_sock.close()
+        receive_sock.close()
     
 def main():
-    play()
+    play(True)
 
 if __name__ == "__main__":
     main()
-
-

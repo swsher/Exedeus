@@ -839,10 +839,9 @@ def play(multiplayer=False):
     SERVER_PORT = 55555
 
     if multiplayer:
-        send_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        receive_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        receive_sock.bind(("0.0.0.0", SERVER_PORT))
-        receive_sock.setblocking(False)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.bind(("0.0.0.0", SERVER_PORT))
+        sock.setblocking(False)
 
     GHOST_COLOR = (0.0, 1.0, 1.0, 0.2)
     
@@ -885,16 +884,17 @@ def play(multiplayer=False):
         # broadcasting position
         if multiplayer:
             message = struct.pack("!fffi", player.x, player.y, player.z, player.direction)
-            send_sock.sendto(message, (SERVER_IP, SERVER_PORT))
+            sock.sendto(message, (SERVER_IP, SERVER_PORT))
 
         # receiving other player's positions
             try:
-                message, addr = receive_sock.recvfrom(1024)
-                multiPlayerData = struct.unpack("!fffi", message)
-                multiPlayerList[0].x = multiPlayerData[0]
-                multiPlayerList[0].y = multiPlayerData[1]
-                multiPlayerList[0].z = multiPlayerData[2]
-                multiPlayerList[0].direction = multiPlayerData[3]
+                while True:
+                    message, addr = sock.recvfrom(1024)
+                    multiPlayerData = struct.unpack("!fffi", message)
+                    multiPlayerList[0].x = multiPlayerData[0]
+                    multiPlayerList[0].y = multiPlayerData[1]
+                    multiPlayerList[0].z = multiPlayerData[2]
+                    multiPlayerList[0].direction = multiPlayerData[3]
             except:
                 pass
 
@@ -1021,8 +1021,7 @@ def play(multiplayer=False):
         clock.tick(60)
 
     if multiplayer:
-        send_sock.close()
-        receive_sock.close()
+        sock.close()
     
 def main():
     play(True)

@@ -1,3 +1,4 @@
+import os
 import pygame
 import math
 from OpenGL import GL
@@ -422,7 +423,7 @@ def loadSNFA():
     floor1Color = (0.98, 0.5, 0.45, 1.0)
     floor2Color = (0.14, 0.24, 0.6, 1.0)
         
-    player = Player(-7000, 500, 1000, 225)
+    player = Player(-7000, 500, 1000, 270)
     winpad = Object(3699, 10299, 1820, 500, 100, 500, winpadColor)
     objectList = []
     
@@ -835,9 +836,9 @@ def play():
     GHOST_COLOR = (0.0, 1.0, 1.0, 0.2)
     
     global time
-    level = loadBasicJumps
+    level = loadSNFA
     player, objectList, winpad = level()
-    controller = InputString("tas2.txt", True)
+    controller = Human()
     
     pygame.init()
     screen = pygame.display.set_mode((0, 0), pygame.DOUBLEBUF | pygame.OPENGL | pygame.FULLSCREEN)
@@ -860,7 +861,9 @@ def play():
     ZOOM_MAX = 20000
     
     ghostString = ""
-    ghostList = [[Player(player.x, player.y, player.z, player.direction), InputString("pb.txt", True)]]
+    ghostList = []
+    for i in range(1, 6):
+        ghostList.append([Player(player.x, player.y, player.z, player.direction), InputString(f"towerpbs\pbtower{i}.txt", True)])
     
     won = False
     printing = True

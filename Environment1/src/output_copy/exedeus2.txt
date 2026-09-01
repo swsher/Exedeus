@@ -1,0 +1,36 @@
+Depth: 0, Total Nodes: 1, Duration: 0.000
+Depth: 1, Total Nodes: 7, Duration: 0.000
+Depth: 2, Total Nodes: 37, Duration: 0.000
+Depth: 3, Total Nodes: 163, Duration: 0.001
+Depth: 4, Total Nodes: 649, Duration: 0.001
+Depth: 5, Total Nodes: 2431, Duration: 0.003
+Depth: 6, Total Nodes: 8749, Duration: 0.011
+Depth: 7, Total Nodes: 30619, Duration: 0.038
+Depth: 8, Total Nodes: 104977, Duration: 0.144
+Depth: 9, Total Nodes: 354295, Duration: 0.655
+Found Optimal Solution: 
+4444444444
+Depth: 10, Total Nodes: 1121935
+Time Taken: 2.605
+
+Depth: 0, Total Nodes: 1, Duration: 0.000
+Depth: 1, Total Nodes: 7, Duration: 0.000
+Depth: 2, Total Nodes: 37, Duration: 0.000
+Depth: 3, Total Nodes: 163, Duration: 0.000
+Depth: 4, Total Nodes: 649, Duration: 0.001
+Depth: 5, Total Nodes: 2431, Duration: 0.003
+Depth: 6, Total Nodes: 8749, Duration: 0.012
+Depth: 7, Total Nodes: 30619, Duration: 0.042
+Depth: 8, Total Nodes: 104977, Duration: 0.167
+Depth: 9, Total Nodes: 354295, Duration: 0.745
+Depth: 10, Total Nodes: 1180981, Duration: 3.450
+Depth: 11, Total Nodes: 3897235, Duration: 11.510
+Total Nodes: 10716247
+Depth: 12, Total Nodes: 12754585, Duration: 36.627
+Total Nodes: 18002305
+Total Nodes: 21410641
+Total Nodes: 26767963
+Total Nodes: 33467827
+Depth cap reached
+Depth: 13, Total Nodes: 41452399
+Time Taken: 408.522

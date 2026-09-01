@@ -609,7 +609,7 @@ def tas(loadString=None):
     global time
     GHOST_COLOR = (0.0, 1.0, 1.0, 0.2)
     
-    level = loadBasicJumps
+    level = loadSNFA
     controller = Human()
     
     player, objectList, winpad = level()
@@ -642,7 +642,7 @@ def tas(loadString=None):
     ZOOM_MAX = 20000
     
     ghostString = ""
-    tasGhost = [Player(player.x, player.y, player.z, player.direction), InputString("tas1.txt", True)]
+    tasGhost = [Player(player.x, player.y, player.z, player.direction), InputString("towerpbs\\pbtower5.txt", True)]
     
     # computing ghost state
     
@@ -848,7 +848,7 @@ def play(multiplayer=False):
     global time
     level = loadSNFA
     player, objectList, winpad = level()
-    controller = Human()
+    controller = InputString("ghost.txt", True)
     
     pygame.init()
     screen = pygame.display.set_mode((0, 0), pygame.DOUBLEBUF | pygame.OPENGL | pygame.FULLSCREEN)
@@ -1024,7 +1024,7 @@ def play(multiplayer=False):
         sock.close()
     
 def main():
-    play(True)
+    play()
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,43 @@
+Trivial1
+Depth: 0, Total Nodes: 1, Duration: 0.000
+Depth: 1, Total Nodes: 7, Duration: 0.000
+Depth: 2, Total Nodes: 43, Duration: 0.000
+Depth: 3, Total Nodes: 259, Duration: 0.001
+Depth: 4, Total Nodes: 1555, Duration: 0.004
+Depth: 5, Total Nodes: 9331, Duration: 0.011
+Depth: 6, Total Nodes: 55987, Duration: 0.056
+Depth: 7, Total Nodes: 335923, Duration: 0.424
+Depth: 8, Total Nodes: 2015539, Duration: 4.039
+Depth: 9, Total Nodes: 12093235, Duration: 27.927
+Total Nodes: 13395835
+Total Nodes: 20944939
+Total Nodes: 26188225
+Total Nodes: 32744167
+Total Nodes: 40932925
+Total Nodes: 51170707
+Found Optimal Solution: 
+4444444444
+Depth: 10, Total Nodes: 60466177
+Time Taken: 859.781
+
+Trivial2
+Depth: 0, Total Nodes: 1, Duration: 0.000
+Depth: 1, Total Nodes: 7, Duration: 0.000
+Depth: 2, Total Nodes: 43, Duration: 0.001
+Depth: 3, Total Nodes: 259, Duration: 0.001
+Depth: 4, Total Nodes: 1555, Duration: 0.004
+Depth: 5, Total Nodes: 9331, Duration: 0.013
+Depth: 6, Total Nodes: 55987, Duration: 0.065
+Depth: 7, Total Nodes: 335923, Duration: 0.507
+Depth: 8, Total Nodes: 2015539, Duration: 4.514
+Depth: 9, Total Nodes: 12093235, Duration: 29.918
+Total Nodes: 12163801
+Total Nodes: 20944939
+Total Nodes: 26188225
+Total Nodes: 32744167
+Total Nodes: 40932925
+Total Nodes: 51170707
+Total Nodes: 63969769
+Depth cap reached
+Depth: 10, Total Nodes: 72559411
+Time Taken: 1336.858

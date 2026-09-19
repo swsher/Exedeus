@@ -260,6 +260,7 @@ def exedeus4solve(level, timeLimit=28800, frames=16):
     baseNode = Node(player, "", False, winpad)
     nodeList.add(baseNode)
     solvedFlag = True
+    bestDistance = 9999999999
     solution = ""
 
     updateTimer = t.perf_counter()
@@ -270,9 +271,12 @@ def exedeus4solve(level, timeLimit=28800, frames=16):
     bestNode = nodeList.pop(0)
     while bestNode is not None:
 
+        distance = bestNode.getDistance(winpad)
+        if distance < bestDistance:
+            solution = bestNode.string
+            bestDistance = distance
+
         if t.perf_counter() - startTime > timeLimit:
-            if solution == "":
-                solution = bestNode.string
             solvedFlag = False
             break
 
@@ -282,7 +286,7 @@ def exedeus4solve(level, timeLimit=28800, frames=16):
             continue
 
         if t.perf_counter() - updateTimer > 30:
-            print(f"Total Nodes: {nodeCount} List Length: {len(nodeList)} Current Distance: {bestNode.getDistance(winpad)} Current Position/Time: ({bestNode.player.x}, {bestNode.player.y}, {len(bestNode.string)})")
+            #print(f"Total Nodes: {nodeCount} List Length: {len(nodeList)} Current Distance: {bestNode.getDistance(winpad)} Current Position/Time: ({bestNode.player.x}, {bestNode.player.y}, {len(bestNode.string)})")
             updateTimer = t.perf_counter()
         
         childNodes = bestNode.getChildren(objectList, winpad, frames)
@@ -299,33 +303,39 @@ def exedeus4solve(level, timeLimit=28800, frames=16):
                 maxTime = len(solution)
                 removeAboveTime(nodeList, maxTime)
                 duration = t.perf_counter() - startTime
-                print(f"Found New Solution(Length: {len(solution)}): " + solution)
-                print(f"Duration: {duration:.3f}")
+                #print(f"Found New Solution(Length: {len(solution)}): " + solution)
+                #print(f"Duration: {duration:.3f}")
                 break
             nodeList.add(cNode)
 
         if len(nodeList) == 0:
-            if solution == "":
-                solution = bestNode.string
-                solvedFlag = False
             break
+
         bestNode = nodeList.pop(0)
     
     endTime = t.perf_counter()
     duration = endTime - startTime
 
-    if solvedFlag:
-        print(f"Found Optimal Solution Within Constraint({frames} frame inputs): \n" + solution)
-    else:
-        print("Cap Reached, Best Solution: \n" + solution)
-    print(f"Total Nodes: {nodeCount}")
-    print(f"Time Taken: {duration:.3f}")
+    #if solvedFlag:
+        #print(f"Found Optimal Solution Within Constraint({frames} frame inputs): \n" + solution)
+    #else:
+        #print("Cap Reached, Best Solution: \n" + solution)
+    #print(f"Total Nodes: {nodeCount}")
+    #print(f"Time Taken: {duration:.3f}")
     
     return solution
 
 def main():
     #play(loadNonTrivial1)
-    exedeus4solve(loadNonTrivial1, frames=8)
+    for i in range(1, 33):
+        solutionString = exedeus4solve(loadNonTrivial1, timeLimit=1, frames=i)
+        print(f"Solution for {i} frames, ", solutionString)
+
+        with open("backupInfo.txt", 'a') as file:
+            file.write(solutionString)
+            file.write("\n")
+
+    print("Program has successfully completed")
 
 if __name__ == "__main__":
     main()

@@ -326,16 +326,16 @@ def exedeus4solve(level, timeLimit=28800, frames=16):
     return solution
 
 def main():
-    #play(loadNonTrivial1)
-    for i in range(1, 33):
-        solutionString = exedeus4solve(loadNonTrivial1, timeLimit=1, frames=i)
-        print(f"Solution for {i} frames, ", solutionString)
+    play(loadNonTrivial1)
+    #for i in range(1, 33):
+        #solutionString = exedeus4solve(loadNonTrivial1, timeLimit=1, frames=i)
+        #print(f"Solution for {i} frames, ", solutionString)
 
-        with open("backupInfo.txt", 'a') as file:
-            file.write(solutionString)
-            file.write("\n")
+        #with open("backupInfo.txt", 'a') as file:
+            #file.write(solutionString)
+            #file.write("\n")
 
-    print("Program has successfully completed")
+    #print("Program has successfully completed")
 
 if __name__ == "__main__":
     main()

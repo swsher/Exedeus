@@ -1,0 +1,71 @@
+Before Sorted List
+
+Found New Solution: 4444444444
+Duration: 0.005
+Total Nodes: 169483 Current Distance: 203.044055470839 Free Slots: 42128/50000
+Total Nodes: 258289 Current Distance: 208.48328718313468 Free Slots: 37903/50000
+Total Nodes: 327445 Current Distance: 207.277780992 Free Slots: 35056/50000
+Total Nodes: 387355 Current Distance: 221.252096 Free Slots: 32972/50000
+Total Nodes: 441487 Current Distance: 227.16934144 Free Slots: 31494/50000
+Total Nodes: 493057 Current Distance: 233.0964680548589 Free Slots: 30489/50000
+Total Nodes: 541825 Current Distance: 239.0738481186109 Free Slots: 29887/50000
+Total Nodes: 590887 Current Distance: 245.40274171844985 Free Slots: 29577/50000
+Total Nodes: 639877 Current Distance: 252.1076594684788 Free Slots: 29528/50000
+Total Nodes: 680749 Current Distance: 257.96941824 Free Slots: 29602/50000
+Total Nodes: 711199 Current Distance: 262.48015330970026 Free Slots: 29682/50000
+Total Nodes: 758089 Current Distance: 269.5614664387766 Free Slots: 29799/50000
+Total Nodes: 807217 Current Distance: 277.0935199419819 Free Slots: 29920/50000
+Total Nodes: 854689 Current Distance: 284.37306636938575 Free Slots: 30002/50000
+Total Nodes: 905077 Current Distance: 291.9836267567333 Free Slots: 30213/50000
+Total Nodes: 955879 Current Distance: 299.52483043975707 Free Slots: 31012/50000
+Total Nodes: 1011415 Current Distance: 307.7204985396016 Free Slots: 33077/50000
+Total Nodes: 1075135 Current Distance: 317.8604182402784 Free Slots: 37379/50000
+Found Optimal Solution: 
+4444444444
+Total Nodes: 1180981
+Time Taken: 566.378
+
+After Sorted List
+
+Found New Solution(Length: 10): 4444444444
+Duration: 0.002
+Found Optimal Solution: 
+4444444444
+Total Nodes: 1180981
+Time Taken: 3.513
+
+Found New Solution(Length: 125): 44444444444445040444444444444444444444444444444444444444444444444444444444445444444444444444444444444444444444444444444444440
+Duration: 0.011
+Total Nodes: 6830269 List Length: 2086861 Current Distance: 1481.6099577915884 Current Position/Time: (1785.6643519716874, 150, 122)
+Total Nodes: 13176217 List Length: 3794553 Current Distance: 1493.6658069056325 Current Position/Time: (1795.4362163209587, 150, 124)
+Total Nodes: 16374097 List Length: 4554741 Current Distance: 1472.2008989550848 Current Position/Time: (1772.8583494997972, 150, 120)
+Total Nodes: 19001329 List Length: 5324670 Current Distance: 1494.9739587304193 Current Position/Time: (1781.5710669227403, 150, 123)
+Total Nodes: 23755663 List Length: 6502551 Current Distance: 1496.5009441020675 Current Position/Time: (1791.9309385678594, 150, 124)
+Total Nodes: 25453747 List Length: 6917657 Current Distance: 1481.832034515098 Current Position/Time: (1797.7146233460917, 150, 123)
+Total Nodes: 27994999 List Length: 7537456 Current Distance: 1498.0463885656875 Current Position/Time: (1777.8539524927182, 150, 123)
+Total Nodes: 29698711 List Length: 7974064 Current Distance: 1498.3272940321754 Current Position/Time: (1789.6835935025847, 150, 124)
+Total Nodes: 30227317 List Length: 8101076 Current Distance: 1498.4773984627368 Current Position/Time: (1777.334076506262, 150, 123)
+Total Nodes: 31069471 List Length: 8301790 Current Distance: 1495.5224037214537 Current Position/Time: (1768.888349596028, 150, 122)
+Total Nodes: 32233999 List Length: 8583971 Current Distance: 1499.0028489046997 Current Position/Time: (1764.749942195674, 150, 122)
+Total Nodes: 33746731 List Length: 8947533 Current Distance: 1499.3995550942404 Current Position/Time: (1776.223056851304, 150, 123)
+Total Nodes: 35189743 List Length: 9292657 Current Distance: 1499.7757291600135 Current Position/Time: (1775.770331927693, 150, 123)
+Total Nodes: 36304297 List Length: 9558745 Current Distance: 1500.052706313955 Current Position/Time: (1751.744944784503, 150, 121)
+Total Nodes: 37128829 List Length: 9754670 Current Distance: 1500.2518127381381 Current Position/Time: (1787.3241761894715, 150, 124)
+Total Nodes: 37674775 List Length: 9876571 Current Distance: 1481.4864043060863 Current Position/Time: (1773.715074026024, 150, 121)
+Total Nodes: 38185519 List Length: 10034538 Current Distance: 1487.6938756871862 Current Position/Time: (1790.4620951553563, 150, 123)
+Total Nodes: 38875621 List Length: 10268087 Current Distance: 1491.0562306726356 Current Position/Time: (1774.2313569459723, 150, 122)
+Total Nodes: 40006789 List Length: 10571823 Current Distance: 1494.1957821675428 Current Position/Time: (1794.7793975455463, 150, 124)
+Total Nodes: 41319883 List Length: 10897464 Current Distance: 1497.1039836092425 Current Position/Time: (1709.3162954463467, 150, 117)
+Total Nodes: 42881827 List Length: 11308316 Current Distance: 1493.4194545779637 Current Position/Time: (1783.4594517182707, 150, 123)
+Total Nodes: 44181799 List Length: 11629667 Current Distance: 1491.6187087976691 Current Position/Time: (1797.980261813341, 150, 124)
+Total Nodes: 45264673 List Length: 11894945 Current Distance: 1500.2903878702195 Current Position/Time: (1751.467287284264, 150, 121)
+Total Nodes: 46133749 List Length: 12101708 Current Distance: 1491.2241099596733 Current Position/Time: (1798.4719537507742, 150, 124)
+Total Nodes: 46414165 List Length: 12167211 Current Distance: 1474.7612917874012 Current Position/Time: (1769.7962479352661, 150, 120)
+Total Nodes: 46549273 List Length: 12212150 Current Distance: 1490.2589827361844 Current Position/Time: (1787.3154023092563, 150, 123)
+Total Nodes: 46722373 List Length: 12258726 Current Distance: 1494.1555344621192 Current Position/Time: (1782.5646156050773, 150, 123)
+Total Nodes: 46918987 List Length: 12309788 Current Distance: 1496.5412486060852 Current Position/Time: (1744.1939951352665, 150, 120)
+Total Nodes: 47128783 List Length: 12363022 Current Distance: 1498.84835013869 Current Position/Time: (1718.6385413988537, 150, 118)
+Cap Reached, Best Solution: 
+44444444444445040444444444444444444444444444444444444444444444444444444444445444444444444444444444444444444444444444444444440
+Total Nodes: 47340769
+Time Taken: 1800.001

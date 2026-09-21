@@ -295,6 +295,11 @@ def exedeus4solve(level, timeLimit=28800, frames=16):
 
         otherTime = visitedNodes.get(bestNode.getKey())
         if otherTime is not None and bestNode.getTime() > otherTime:
+            if len(nodeList) == 0:
+                print("Full solution space searched")
+                endCondition = f"SEARCH_COMPLETED({nodeCount} NODES)"
+                break
+
             bestNode = nodeList.pop(0)
             continue
 
@@ -358,7 +363,7 @@ def storeInCSV(filename="backupInfo.csv", start=0, end=1):
 
 def main():
     #play(loadNonTrivial1)
-    storeInCSV("backupInfo.csv", 256, 512)
+    storeInCSV("backupInfo.csv", 128, 256)
 
 if __name__ == "__main__":
     main()

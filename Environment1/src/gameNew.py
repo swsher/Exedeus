@@ -1,4 +1,4 @@
-import pygame
+#import pygame
 import time as t # bum used time as a var
 import json
 import socket

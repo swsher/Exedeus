@@ -1,4 +1,4 @@
-import pygame
+#import pygame
 import time as t # bum used time as a var
 import json
 import socket
@@ -252,10 +252,12 @@ def exedeus3solve(level, timeLimit=1800):
 # now frames are split
 def exedeus4solve(level, timeLimit=28800, frames=16):
     global nodeCount
+    nodeCount = 0
 
     startTime = t.perf_counter()
     nodeList = SortedList()
     maxTime = 60000
+    endCondition = "ERROR_SHOULD_NOT_BE_THIS_END_CONDITION"
     
     player, objectList, winpad = level()
     baseNode = Node(player, "", False, winpad)
@@ -275,6 +277,8 @@ def exedeus4solve(level, timeLimit=28800, frames=16):
         percentMemory = psutil.virtual_memory().percent
         if percentMemory > 99:
             print("Memory Cap Reached")
+            ramGB = psutil.virtual_memory().total / (1024 ** 3)
+            endCondition = f"RAM_EXCEEDED({ramGB} GB)"
             solvedFlag = False
             break
 
@@ -285,6 +289,7 @@ def exedeus4solve(level, timeLimit=28800, frames=16):
 
         if t.perf_counter() - startTime > timeLimit:
             print("Time limit reached")
+            endCondition = f"TIME_LIMIT_EXCEEDED({timeLimit} SECONDS)"
             solvedFlag = False
             break
 
@@ -319,6 +324,7 @@ def exedeus4solve(level, timeLimit=28800, frames=16):
 
         if len(nodeList) == 0:
             print("Full solution space searched")
+            endCondition = f"SEARCH_COMPLETED({nodeCount} NODES)"
             break
 
         bestNode = nodeList.pop(0)
@@ -333,20 +339,26 @@ def exedeus4solve(level, timeLimit=28800, frames=16):
     #print(f"Total Nodes: {nodeCount}")
     #print(f"Time Taken: {duration:.3f}")
     
-    return solution
+    return solution, endCondition
+
+# format: frames, endCondition, string
+def storeInCSV(filename="backupInfo.csv", start=0, end=1):
+    for i in range(start, end+1):
+        solutionString, endCondition = exedeus4solve(loadNonTrivial1, timeLimit=1800, frames=i)
+        print(f"Solution for {i} frames, ", solutionString)
+        with open(filename, 'a') as file:
+            file.write(str(i))
+            file.write(",")
+            file.write(endCondition)
+            file.write(", ")
+            file.write(solutionString)
+            file.write("\n")
+
+    print("Program has successfully completed")
 
 def main():
-    play(loadNonTrivial1)
-    #for i in range(1, 33):
-    #    solutionString = exedeus4solve(loadNonTrivial1, timeLimit=1, frames=i)
-    #    print(f"Solution for {i} frames, ", solutionString)
-#
-    #    with open("backupInfo.txt", 'a') as file:
-    #        file.write(solutionString)
-    #        if i != 32:
-    #            file.write("\n")
-
-    #print("Program has successfully completed")
+    #play(loadNonTrivial1)
+    storeInCSV("backupInfo.csv", 256, 512)
 
 if __name__ == "__main__":
     main()

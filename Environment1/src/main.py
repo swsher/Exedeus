@@ -3,6 +3,7 @@ import time as t # bum used time as a var
 import json
 import socket
 import math
+import psutil
 from sortedcontainers import SortedList
 from gameNew import *
 from old import *
@@ -270,6 +271,12 @@ def exedeus4solve(level, timeLimit=28800, frames=16):
 
     bestNode = nodeList.pop(0)
     while bestNode is not None:
+         
+        percentMemory = psutil.virtual_memory().percent
+        if percentMemory > 99:
+            print("Memory Cap Reached")
+            solvedFlag = False
+            break
 
         distance = bestNode.getDistance(winpad)
         if distance < bestDistance:
@@ -277,6 +284,7 @@ def exedeus4solve(level, timeLimit=28800, frames=16):
             bestDistance = distance
 
         if t.perf_counter() - startTime > timeLimit:
+            print("Time limit reached")
             solvedFlag = False
             break
 
@@ -303,12 +311,14 @@ def exedeus4solve(level, timeLimit=28800, frames=16):
                 maxTime = len(solution)
                 removeAboveTime(nodeList, maxTime)
                 duration = t.perf_counter() - startTime
-                #print(f"Found New Solution(Length: {len(solution)}): " + solution)
+                print(f"Found New Solution(Length: {len(solution)}): " + solution)
+                bestDistance = -69
                 #print(f"Duration: {duration:.3f}")
                 break
             nodeList.add(cNode)
 
         if len(nodeList) == 0:
+            print("Full solution space searched")
             break
 
         bestNode = nodeList.pop(0)
@@ -328,12 +338,13 @@ def exedeus4solve(level, timeLimit=28800, frames=16):
 def main():
     play(loadNonTrivial1)
     #for i in range(1, 33):
-        #solutionString = exedeus4solve(loadNonTrivial1, timeLimit=1, frames=i)
-        #print(f"Solution for {i} frames, ", solutionString)
-
-        #with open("backupInfo.txt", 'a') as file:
-            #file.write(solutionString)
-            #file.write("\n")
+    #    solutionString = exedeus4solve(loadNonTrivial1, timeLimit=1, frames=i)
+    #    print(f"Solution for {i} frames, ", solutionString)
+#
+    #    with open("backupInfo.txt", 'a') as file:
+    #        file.write(solutionString)
+    #        if i != 32:
+    #            file.write("\n")
 
     #print("Program has successfully completed")
 

@@ -359,14 +359,18 @@ def play(level):
   global time
 
   player, objectList, winpad = level()
-  controller = Human()
-  #controller = InputString("44444444444444444444444444444444444444444444444444444444444444444444444444444444555555555555555555555555555555554444444444444444444444444444444455555555555555555555555555555555444444444444444411111111111111110000000000000000555555555555555544444444444444444444444444444444444444444444444455555555555555554444444444444444555555555555555555555555555555554444444444444444444444444444444455555555555555554444444444444444444444444444444455555555555555555555555555555555444444444444444444444444444444445555555555555555000000000000000033333333333333331111111111111111222222222222222255555555555555555555555555555555333333333333333344444444444444441111111111111111444444444444444433333333333333332222222222222222333333333333333355555555555555554444444444444444444444444444444444444444444444444444444444444444222222222222222233333333333333335555555555555555444444444444444444444444444444440000000000000000333333333333333333333333333333334444444444444444444444444444444422222222222222222222222222222222444444444444444444444444444444442222222222222222222222222222222200000000000000004444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444")
+  #controller = Human()
+  #controller = InputString("")
   
-  ghostList = []#[Player(0, 0), InputString("pb.txt", True)]]
+  ghostList = []#[Player(0, 0), InputString("pb.txt", True), "pb"]]
+  lineNumber = 0
   with open("backupInfo.txt", 'r') as file:
     for line in file:
-      ghostList.append([Player(0, 0), InputString(line.rstrip('\n'))])
-    
+      lineNumber += 1
+      ghostList.append([Player(0, 0), InputString(line.rstrip('\n')), str(lineNumber)])
+
+  controller = ghostList[-1][1]
+
   pygame.init()
   screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
   clock = pygame.time.Clock()
@@ -383,7 +387,7 @@ def play(level):
   ghostSurface.fill((0, 255, 255, 85))
   
   while(active):
-        clock.tick(60)
+        clock.tick(10)
         reset = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -412,9 +416,9 @@ def play(level):
         
         if state == 0:
             time += 1
-            text_surface = font.render(str(time), True, pygame.Color("black"))
-            text_rect = text_surface.get_rect(center=(width // 2, height // 2))
-            screen.blit(text_surface, text_rect)
+            textSurface = font.render(str(time), True, pygame.Color("black"))
+            textRect = textSurface.get_rect(center=(width // 2, height // 2))
+            screen.blit(textSurface, textRect)
             if time == 0:
                 state = 1
         elif state == 1:
@@ -422,7 +426,12 @@ def play(level):
             for ghost in ghostList:
               ghostAction = ghost[1].getAction()
               finished = ghost[0].doTick(ghostAction, objectList, winpad)
-              screen.blit(ghostSurface, ((ghost[0].x-camX)*ZOOM, (camY-ghost[0].y-Player.HEIGHT)*ZOOM))
+              ghostRect = ((ghost[0].x-camX)*ZOOM, (camY-ghost[0].y-Player.HEIGHT)*ZOOM)
+              screen.blit(ghostSurface, ghostRect)
+
+              textSurface = font.render(ghost[2], True, pygame.Color("black"))
+              textRect = textSurface.get_rect(center=((ghost[0].x+50-camX)*ZOOM, (camY-ghost[0].y-50-Player.HEIGHT)*ZOOM))
+              screen.blit(textSurface, textRect)
               if finished:
                 ghost[0].x = -999999
               

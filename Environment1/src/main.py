@@ -5,7 +5,7 @@ import socket
 import math
 import psutil
 from sortedcontainers import SortedList
-from gameNew import *
+from game import *
 from old import *
 from collections import deque
 
@@ -65,6 +65,11 @@ class Node:
 
     def getKey(self):
         return (self.player.x, self.player.y, self.player.velX, self.player.velY)
+
+    # ub if cellSize isn't an int > 0
+    def getCellKey(self, cellSize=5):
+        fCellSize = float(cellSize)
+        return (int(self.player.x/fCellSize)*cellSize, int(self.player.y/fCellSize)*cellSize, int(self.player.velX/fCellSize)*cellSize, int(self.player.velY/fCellSize)*cellSize)
 
     def getDistance(self, winpad):
         return math.sqrt((winpad.y-self.player.y)**2 + (winpad.x-self.player.x)**2) + float(len(self.string)*10)
@@ -278,7 +283,7 @@ def exedeus4solve(level, timeLimit=28800, frames=16):
         if percentMemory > 99:
             print("Memory Cap Reached")
             ramGB = psutil.virtual_memory().total / (1024 ** 3)
-            endCondition = f"RAM_EXCEEDED({ramGB} GB)"
+            endCondition = f"RAM_EXCEEDED({ramGB}_GB)"
             solvedFlag = False
             break
 
@@ -289,7 +294,7 @@ def exedeus4solve(level, timeLimit=28800, frames=16):
 
         if t.perf_counter() - startTime > timeLimit:
             print("Time limit reached")
-            endCondition = f"TIME_LIMIT_EXCEEDED({timeLimit} SECONDS)"
+            endCondition = f"TIME_LIMIT_EXCEEDED({timeLimit}_SECONDS)"
             solvedFlag = False
             break
 
@@ -297,7 +302,7 @@ def exedeus4solve(level, timeLimit=28800, frames=16):
         if otherTime is not None and bestNode.getTime() > otherTime:
             if len(nodeList) == 0:
                 print("Full solution space searched")
-                endCondition = f"SEARCH_COMPLETED({nodeCount} NODES)"
+                endCondition = f"SEARCH_COMPLETED({nodeCount}_NODES)"
                 break
 
             bestNode = nodeList.pop(0)
@@ -321,7 +326,7 @@ def exedeus4solve(level, timeLimit=28800, frames=16):
                 maxTime = len(solution)
                 removeAboveTime(nodeList, maxTime)
                 duration = t.perf_counter() - startTime
-                print(f"Found New Solution(Length: {len(solution)}): " + solution)
+                #print(f"Found New Solution(Length: {len(solution)}): " + solution)
                 bestDistance = -69
                 #print(f"Duration: {duration:.3f}")
                 break
@@ -329,7 +334,104 @@ def exedeus4solve(level, timeLimit=28800, frames=16):
 
         if len(nodeList) == 0:
             print("Full solution space searched")
-            endCondition = f"SEARCH_COMPLETED({nodeCount} NODES)"
+            endCondition = f"SEARCH_COMPLETED({nodeCount}_NODES)"
+            break
+
+        bestNode = nodeList.pop(0)
+    
+    endTime = t.perf_counter()
+    duration = endTime - startTime
+
+    #if solvedFlag:
+        #print(f"Found Optimal Solution Within Constraint({frames} frame inputs): \n" + solution)
+    #else:
+        #print("Cap Reached, Best Solution: \n" + solution)
+    #print(f"Total Nodes: {nodeCount}")
+    #print(f"Time Taken: {duration:.3f}")
+    
+    return solution, endCondition
+
+# now cells group similar frames
+def exedeus5solve(level, timeLimit=900, frames=8, cellSize=5):
+    global nodeCount
+    nodeCount = 0
+
+    startTime = t.perf_counter()
+    nodeList = SortedList()
+    maxTime = 60000
+    endCondition = "ERROR_SHOULD_NOT_BE_THIS_END_CONDITION"
+    
+    player, objectList, winpad = level()
+    baseNode = Node(player, "", False, winpad)
+    nodeList.add(baseNode)
+    solvedFlag = True
+    bestDistance = 9999999999
+    solution = ""
+
+    updateTimer = t.perf_counter()
+
+    visitedNodes = dict()
+    visitedNodes[baseNode.getCellKey(cellSize)] = 0
+
+    bestNode = nodeList.pop(0)
+    while bestNode is not None:
+         
+        percentMemory = psutil.virtual_memory().percent
+        if percentMemory > 99:
+            print("Memory Cap Reached")
+            ramGB = psutil.virtual_memory().total / (1024 ** 3)
+            endCondition = f"RAM_EXCEEDED({ramGB}_GB)"
+            solvedFlag = False
+            break
+
+        distance = bestNode.getDistance(winpad)
+        if distance < bestDistance:
+            solution = bestNode.string
+            bestDistance = distance
+
+        if t.perf_counter() - startTime > timeLimit:
+            print("Time limit reached")
+            endCondition = f"TIME_LIMIT_EXCEEDED({timeLimit}_SECONDS)"
+            solvedFlag = False
+            break
+
+        otherTime = visitedNodes.get(bestNode.getCellKey(cellSize))
+        if otherTime is not None and bestNode.getTime() > otherTime:
+            if len(nodeList) == 0:
+                print("Full solution space searched")
+                endCondition = f"SEARCH_COMPLETED({nodeCount}_NODES)"
+                break
+
+            bestNode = nodeList.pop(0)
+            continue
+
+        if t.perf_counter() - updateTimer > 30:
+            #print(f"Total Nodes: {nodeCount} List Length: {len(nodeList)} Current Distance: {bestNode.getDistance(winpad)} Current Position/Time: ({bestNode.player.x}, {bestNode.player.y}, {len(bestNode.string)})")
+            updateTimer = t.perf_counter()
+        
+        childNodes = bestNode.getChildren(objectList, winpad, frames)
+        for cNode in childNodes:
+            if maxTime <= len(cNode.string):
+                continue
+            otherTime = visitedNodes.get(cNode.getCellKey(cellSize))
+            if otherTime is not None and cNode.getTime() >= otherTime:
+                continue
+
+            visitedNodes[cNode.getCellKey(cellSize)] = cNode.getTime()
+            if cNode.isWin:
+                solution = cNode.string
+                maxTime = len(solution)
+                removeAboveTime(nodeList, maxTime)
+                duration = t.perf_counter() - startTime
+                #print(f"Found New Solution(Length: {len(solution)}): " + solution)
+                bestDistance = -69
+                #print(f"Duration: {duration:.3f}")
+                break
+            nodeList.add(cNode)
+
+        if len(nodeList) == 0:
+            print("Full solution space searched")
+            endCondition = f"SEARCH_COMPLETED({nodeCount}_NODES)"
             break
 
         bestNode = nodeList.pop(0)
@@ -347,23 +449,23 @@ def exedeus4solve(level, timeLimit=28800, frames=16):
     return solution, endCondition
 
 # format: frames, endCondition, string
-def storeInCSV(filename="backupInfo.csv", start=0, end=1):
+def storeInCSV(filename="test.csv", start=1, end=16, cellSize=10):
     for i in range(start, end+1):
-        solutionString, endCondition = exedeus4solve(loadNonTrivial1, timeLimit=1800, frames=i)
+        solutionString, endCondition = exedeus5solve(loadNonTrivial1, timeLimit=120, frames=i, cellSize=cellSize)
         print(f"Solution for {i} frames, ", solutionString)
         with open(filename, 'a') as file:
             file.write(str(i))
             file.write(",")
             file.write(endCondition)
-            file.write(", ")
+            file.write(",")
             file.write(solutionString)
             file.write("\n")
 
     print("Program has successfully completed")
 
 def main():
-    #play(loadNonTrivial1)
-    storeInCSV("backupInfo.csv", 128, 256)
+    play(loadNonTrivial1)#, spec=4)
+    #storeInCSV("info5o.csv")
 
 if __name__ == "__main__":
     main()

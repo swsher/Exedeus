@@ -1,4 +1,4 @@
-#import pygame
+import pygame
 import time as t # bum used time as a var
 import json
 import socket
@@ -355,21 +355,27 @@ def tas(): # right/left arrow to change frame press/hold w to write input s to s
     
     pygame.display.flip()
 
-def play(level):
+def play(level, spec=None):
   global time
 
   player, objectList, winpad = level()
   #controller = Human()
   #controller = InputString("")
   
-  ghostList = []#[Player(0, 0), InputString("pb.txt", True), "pb"]]
+  ghostList = []#[Player(0, 0), InputString("pb.txt", True), "pb", (0, 255, 255, 85)]]
   lineNumber = 0
-  with open("backupInfo.txt", 'r') as file:
+  with open("info5.csv", 'r') as file:
     for line in file:
+      lineSplit = line.split(",")
       lineNumber += 1
-      ghostList.append([Player(0, 0), InputString(line.rstrip('\n')), str(lineNumber)])
+      color = (255, 255, 255, 85)
+      match lineSplit[1][0]:
+         case 'S': color = (0, 255, 0, 85)
+         case 'R': color = (255, 0, 0, 85)
+         case 'T': color = (0, 0, 255, 85)
+      ghostList.append([Player(0, 0), InputString(lineSplit[2].rstrip('\n')), lineSplit[0], color])
 
-  controller = ghostList[-1][1]
+  controller = ghostList[spec][1]
 
   pygame.init()
   screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -387,7 +393,7 @@ def play(level):
   ghostSurface.fill((0, 255, 255, 85))
   
   while(active):
-        clock.tick(10)
+        clock.tick(20)
         reset = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -427,6 +433,7 @@ def play(level):
               ghostAction = ghost[1].getAction()
               finished = ghost[0].doTick(ghostAction, objectList, winpad)
               ghostRect = ((ghost[0].x-camX)*ZOOM, (camY-ghost[0].y-Player.HEIGHT)*ZOOM)
+              ghostSurface.fill(ghost[3])
               screen.blit(ghostSurface, ghostRect)
 
               textSurface = font.render(ghost[2], True, pygame.Color("black"))
@@ -440,7 +447,7 @@ def play(level):
             won = player.doTick(action, objectList, winpad)
             
             playerRect = pygame.Rect((player.x-camX)*ZOOM, (camY-player.y-Player.HEIGHT)*ZOOM, Player.WIDTH*ZOOM, Player.HEIGHT*ZOOM)
-            pygame.draw.rect(screen, pygame.Color("black"), playerRect)
+            #pygame.draw.rect(screen, pygame.Color("black"), playerRect)
         
             winpadRect = pygame.Rect((winpad.x-camX)*ZOOM, (camY-winpad.y-winpad.height)*ZOOM, winpad.width*ZOOM, winpad.height*ZOOM)
             pygame.draw.rect(screen, pygame.Color("green"), winpadRect)
